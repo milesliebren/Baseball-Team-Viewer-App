@@ -16,8 +16,7 @@ public abstract class TeamDatabase extends RoomDatabase {
 
     private static volatile TeamDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     static TeamDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {

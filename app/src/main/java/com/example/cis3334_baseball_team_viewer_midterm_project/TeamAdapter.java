@@ -7,10 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
+import java.util.List;
 
-public class TeamAdapter extends RecyclerView.Adapter<ViewHolder>
+public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
 {
-    ArrayList<Team> mlbTeams = new ArrayList<Team>();
+    List<Team> mlbTeams = new ArrayList<Team>();
     public TeamAdapter(Application application, MainViewModel mainViewModel)
     {
         mlbTeams = new ArrayList<>();
@@ -18,20 +19,26 @@ public class TeamAdapter extends RecyclerView.Adapter<ViewHolder>
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public TeamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view, parent, false);
-        return new ViewHolder(view);
+        return new TeamViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
-    {
-
+    public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
+        // Bind data to the ViewHolder here
+        Team team = mlbTeams.get(position);
+        holder.bindData(team);
     }
 
     @Override
     public int getItemCount() {
         return 0;
+    }
+
+    public void submitList(List<Team> teams)
+    {
+        this.mlbTeams = teams;
     }
 }

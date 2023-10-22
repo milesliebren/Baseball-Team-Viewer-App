@@ -27,7 +27,7 @@ public class Team
     }
 
     public enum TeamLevel {
-        MLB, TRIPLE_A, DOUBLE_A
+        MLB, TRIPLE_A, DOUBLE_A, UNKNOWN
     }
 
     public String getName() {
