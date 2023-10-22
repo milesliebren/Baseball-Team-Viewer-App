@@ -26,7 +26,8 @@ public class Team
         this.level = level;
     }
 
-    public enum TeamLevel {
+    public enum TeamLevel
+    {
         MLB, TRIPLE_A, DOUBLE_A, UNKNOWN
     }
 
@@ -34,74 +35,16 @@ public class Team
         return name;
     }
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getManager() {
         return manager;
-    }
-
-    public void setManager(String manager) {
-        this.manager = manager;
     }
 
     public String getRecord() {
         return record;
     }
 
-    public void setRecord(String record) {
-        this.record = record;
-    }
-
     public String getStadiumName() {
         return stadiumName;
-    }
-
-    public void setStadiumName(String stadiumName) {
-        this.stadiumName = stadiumName;
-    }
-
-    public String getWebPage() {
-        return webPage;
-    }
-
-    public void setWebPage(String webPage) {
-        this.webPage = webPage;
-    }
-
-    public String getStadiumAddress() {
-        return stadiumAddress;
-    }
-
-    public void setStadiumAddress(String stadiumAddress) {
-        this.stadiumAddress = stadiumAddress;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setLevel(TeamLevel level) {
-        this.level = level;
-    }
-
-    public String getLevelString() {
-        switch (level) {
-            case MLB:
-                return "MLB";
-            case TRIPLE_A:
-                return "Triple A";
-            case DOUBLE_A:
-                return "Double A";
-            default:
-                return "Unknown";
-        }
     }
 
     public TeamLevel getLevel()
