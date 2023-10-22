@@ -37,7 +37,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
         return 0;
     }
 
-    public void submitList(List<Team> teams)
+    public void submitList(@NonNull List<Team> teams)
     {
         this.mlbTeams = teams;
     }

@@ -1,5 +1,6 @@
 package com.example.cis3334_baseball_team_viewer_midterm_project;
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -23,9 +24,15 @@ public class TeamRepository {
     private TeamDAO teamDAO;
     TeamDatabase database;
 
-    public TeamRepository(Application application) {
+    public TeamRepository(Application application)
+    {
         database = TeamDatabase.getDatabase(application);
         teamDAO = database.teamDAO();
+        Log.d("Created Repository" , "Connected Successfully to Repository");
+
+        // Use a background thread to fetch and insert data from the API
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(this::fetchAndInsertDataFromAPI);
     }
 
     public void fetchAndInsertDataFromAPI() {
@@ -33,9 +40,10 @@ public class TeamRepository {
             String apiUrl = "https://statsapi.mlb.com/api/v1/teams";
             HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl).openConnection();
             connection.setRequestMethod("GET");
-
             int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
+            Log.e("Connecting to API" , "Response Code: " + responseCode);
+            if (responseCode == HttpURLConnection.HTTP_OK)
+            {
                 InputStream inputStream = connection.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -71,15 +79,15 @@ public class TeamRepository {
 
                     // Create a Team object with the extracted data
                     Team team = new Team(teamName, manager, "", stadiumName, webPage, stadiumAddress, level);
-
                     // Insert the Team object into the database
-                    database.databaseWriteExecutor.execute(() -> {
-                        teamDAO.insert(team);
-                    });
+                    insertTeam(team);
                 }
             }
+            else
+            {
+                Log.e("TeamRepository", "API request failed with response code: " + responseCode);
+            }
         } catch (Exception e) {
-            // Handle exceptions, such as network errors or parsing errors
             e.printStackTrace();
         }
     }
@@ -91,7 +99,10 @@ public class TeamRepository {
     }
 
     public LiveData<List<Team>> getMLBTeams() {
-        return teamDAO.getMLB();
+        Log.d("TeamRepository", "Fetching MLB teams...");
+        LiveData<List<Team>> mlbTeams = teamDAO.getMLB();
+        Log.d("TeamRepository", "MLB teams retrieved: " + mlbTeams.getValue()); // Log the retrieved data
+        return mlbTeams;
     }
 
     public LiveData<List<Team>> getTripleATeams() {
