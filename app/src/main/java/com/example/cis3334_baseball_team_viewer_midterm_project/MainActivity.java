@@ -99,36 +99,4 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-
-    private void getStudentAPI() {
-        // ======================= Student must add code here to get JSON data from an API =======================
-        // Define URL to use. Using Cat Facts API here. Note number of facts set to 1
-        // ---- Remember to add the following permission to the AndroidManifest.xml file
-        //      <uses-permission android:name="android.permission.INTERNET" />
-        String url = "https://statsapi.mlb.com/api/v1/teams";
-        Log.d("CIS 3334", "url = "+url);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        textViewStatus.setText("MLB Received Response");
-                        String jsonFact= response.toString();
-                        Gson gson = new Gson();
-                        MLBTeams MLBdata = gson.fromJson(jsonFact, MLBTeams.class);
-                        textViewStatus.setText("Number of teams received = "+MLBdata.teams.size());
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("CIS 3334", "In MLB -- onErrorResponse = "+error);
-
-                    }
-                });
-
-        // Create a RequestQueue used to send web requests using Volley
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(jsonObjectRequest);
-
-    }
 }
