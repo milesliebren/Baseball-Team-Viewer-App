@@ -9,17 +9,17 @@ public class Team
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
-    private String manager;
-    private String record;
-    private String stadiumName;
-    private String webPage;
-    private String stadiumAddress;
+    private String division;
+    private String firstYearOfPlay; // Change to match the JSON field
+    private String stadiumName; // Change to match the JSON field
+    private String webPage; // Change to match the JSON field
+    private String stadiumAddress; // Change to match the JSON field
     private TeamLevel level;
 
-    public Team(String name, String manager, String record, String stadiumName, String webPage, String stadiumAddress, TeamLevel level) {
+    public Team(String name, String division, String firstYearOfPlay, String stadiumName, String webPage, String stadiumAddress, TeamLevel level) {
         this.name = name;
-        this.manager = manager;
-        this.record = record;
+        this.division = division;
+        this.firstYearOfPlay = firstYearOfPlay;
         this.stadiumName = stadiumName;
         this.webPage = webPage;
         this.stadiumAddress = stadiumAddress;
@@ -35,12 +35,16 @@ public class Team
         return name;
     }
 
-    public String getManager() {
-        return manager;
+    public String getDivision() {
+        return division;
     }
 
-    public String getRecord() {
-        return record;
+    public String getFirstYearOfPlay() {
+        return firstYearOfPlay;
+    }
+
+    public String getWebPage() {
+        return webPage;
     }
 
     public String getStadiumName() {

@@ -3,8 +3,9 @@ package com.example.cis3334_baseball_team_viewer_midterm_project;
 import java.util.ArrayList;
 public class MLBTeams {
     private String copyright;
-    ArrayList < Team > teams = new ArrayList < Team > ();
-    public class Team{
+    ArrayList <Team> teams = new ArrayList <Team>();
+
+    public class MyTeam{
         public String allStarStatus;
         public int id;
         public String name;

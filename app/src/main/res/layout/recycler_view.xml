@@ -22,27 +22,27 @@
         android:layout_marginTop="16dp"
         android:text="Team Name"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textViewRecord"
+        app:layout_constraintStart_toStartOf="@+id/textViewDivision"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewRecord"
+        android:id="@+id/textViewDivision"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
-        android:text="Record"
+        android:text="Division"
         app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
         app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
     <TextView
-        android:id="@+id/textViewManager"
+        android:id="@+id/textViewFirstYearOfPLay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Manager"
-        app:layout_constraintStart_toStartOf="@+id/textViewRecord"
-        app:layout_constraintTop_toBottomOf="@+id/textViewRecord" />
+        android:text="Est."
+        app:layout_constraintStart_toStartOf="@+id/textViewDivision"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDivision" />
 
     <Button
         android:id="@+id/buttonRoster"

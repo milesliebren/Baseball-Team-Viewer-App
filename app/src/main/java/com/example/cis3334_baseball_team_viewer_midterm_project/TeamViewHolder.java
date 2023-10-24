@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class TeamViewHolder extends RecyclerView.ViewHolder
 {
     TextView textViewName;
-    TextView textViewRecord;
-    TextView textViewManager;
+    TextView textViewDivision;
+    TextView textViewFirstYearOfPlay;
     TextView textViewStadium;
     ImageView imageViewLogo;
     Button buttonRoster;
@@ -24,8 +24,8 @@ public class TeamViewHolder extends RecyclerView.ViewHolder
         super(itemView);
 
         textViewName = itemView.findViewById(R.id.textViewName);
-        textViewRecord = itemView.findViewById(R.id.textViewRecord);
-        textViewManager = itemView.findViewById(R.id.textViewManager);
+        textViewDivision = itemView.findViewById(R.id.textViewDivision);
+        textViewFirstYearOfPlay = itemView.findViewById(R.id.textViewFirstYearOfPLay);
         textViewStadium = itemView.findViewById(R.id.textViewStadium);
         imageViewLogo = itemView.findViewById(R.id.imageViewLogo);
         buttonRoster = itemView.findViewById(R.id.buttonRoster);
@@ -36,8 +36,6 @@ public class TeamViewHolder extends RecyclerView.ViewHolder
     {
         // Set data from the 'team' object to the respective views
         textViewName.setText(team.getName());
-        textViewRecord.setText(team.getRecord());
-        textViewManager.setText(team.getManager());
         textViewStadium.setText(team.getStadiumName());
 
         // You can set the 'imageViewLogo' here with an image based on 'team' data
