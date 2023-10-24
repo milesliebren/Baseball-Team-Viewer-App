@@ -37,8 +37,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(teamAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        teamAdapter.notifyDataSetChanged();
+
         setUpTabListeners();
         observeData();
+
     }
 
     @Override
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 viewModel.switchToLevel(selectedLeague);
 
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 // Handle unselected tab if needed
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
                 // Handle reselected tab if needed
             }
+
         };
         Log.d("MainActivity", "Selected league: " + selectedLeague);
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
@@ -95,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 // Filter and display teams based on the selected league
                 List<MLBTeams.Team> filteredTeams = filterTeamsByLeague(teams, selectedLeague);
                 teamAdapter.submitList(filteredTeams);
+                teamAdapter.notifyDataSetChanged();
                 Log.d("MainActivity", "Number of filtered teams: " + filteredTeams.size());
             }
         });

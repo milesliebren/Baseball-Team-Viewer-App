@@ -34,7 +34,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mlbTeams.size();
     }
 
     public void submitList(@NonNull List<MLBTeams.Team> teams)
