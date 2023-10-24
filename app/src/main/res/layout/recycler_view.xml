@@ -7,10 +7,11 @@
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="17dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.061"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -19,18 +20,19 @@
         android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:text="Team Name"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textViewDivision"
+        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewDivision"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="12dp"
         android:text="Division"
         app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
         app:layout_constraintTop_toBottomOf="@+id/textViewName" />
@@ -39,43 +41,45 @@
         android:id="@+id/textViewFirstYearOfPLay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="12dp"
         android:text="Est."
-        app:layout_constraintStart_toStartOf="@+id/textViewDivision"
+        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
         app:layout_constraintTop_toBottomOf="@+id/textViewDivision" />
 
     <Button
         android:id="@+id/buttonRoster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
         android:text="Roster"
-        app:layout_constraintBottom_toBottomOf="@+id/imageViewLogo"
-        app:layout_constraintStart_toEndOf="@+id/imageViewLogo" />
+        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStadium" />
 
     <Button
         android:id="@+id/buttonStadiumDirections"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="12dp"
         android:text="Directions"
-        app:layout_constraintBaseline_toBaselineOf="@+id/buttonRoster"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintStart_toEndOf="@+id/buttonRoster"
+        app:layout_constraintTop_toTopOf="@+id/buttonRoster" />
 
     <TextView
         android:id="@+id/textViewStadium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:text="Stadium"
-        app:layout_constraintBottom_toTopOf="@+id/buttonStadiumDirections"
-        app:layout_constraintStart_toStartOf="@+id/buttonStadiumDirections"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.82" />
+        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFirstYearOfPLay" />
 
     <Space
         android:layout_width="413dp"
-        android:layout_height="13dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonRoster" />
+        android:layout_height="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

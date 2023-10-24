@@ -28,12 +28,10 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindData(MLBTeams.Team team) {
-        // Bind data to the views
-        // Example:
         textViewName.setText(team.name);
         textViewDivision.setText(team.division.name);
-        textViewFirstYearOfPlay.setText(team.firstYearOfPlay);
+        textViewFirstYearOfPlay.setText("Established In: " + team.firstYearOfPlay);
         textViewStadium.setText(team.venue.name);
-        // imageViewLogo.setImageResource(team.getLogoResourceId()); // Set the team logo
+        imageViewLogo.setImageResource(R.drawable.download);
     }
 }

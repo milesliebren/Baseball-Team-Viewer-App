@@ -3,6 +3,7 @@ package com.example.cis3334_baseball_team_viewer_midterm_project;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,10 +20,9 @@ public class MainActivity extends AppCompatActivity {
     TabItem tabTripleA;
     TabItem tabDoubleA;
     RecyclerView recyclerView;
-    TextView textViewStatus;
     MainViewModel viewModel;
     TeamAdapter teamAdapter;
-    MLBTeams.League selectedLeague = MLBTeams.League.MLB;
+    MLBTeams.League selectedLeague;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +32,15 @@ public class MainActivity extends AppCompatActivity {
         teamAdapter = new TeamAdapter(this.getApplication(), viewModel);
 
         recyclerView = findViewById(R.id.recyclerView);
-        textViewStatus = findViewById(R.id.textViewStatus);
 
         recyclerView.setAdapter(teamAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        teamAdapter.notifyDataSetChanged();
-
         setUpTabListeners();
         observeData();
 
+        // Trigger the initial loading of data when the app is first created
+        viewModel.switchToLevel(selectedLeague);
     }
 
     @Override
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 // Handle the tab selection event here
                 int position = tab.getPosition();
-
                 switch (position) {
                     case 0:
                         selectedLeague = MLBTeams.League.MLB;
@@ -76,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("mainActivity", "Selected League: " + selectedLeague);
                 // Update the teams based on the selected league
                 viewModel.switchToLevel(selectedLeague);
-
             }
 
             @Override
