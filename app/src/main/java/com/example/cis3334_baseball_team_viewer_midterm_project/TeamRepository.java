@@ -20,7 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class TeamRepository {
     private RequestQueue requestQueue;
@@ -37,6 +40,7 @@ public class TeamRepository {
     public LiveData<List<MLBTeams.Team>> getTeamsFromAPI() {
         String apiUrl = "https://statsapi.mlb.com/api/v1/teams";
         Log.d("repository", "Accessing Data...");
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, apiUrl, null,
                 new Response.Listener<JSONObject>() {
@@ -45,49 +49,47 @@ public class TeamRepository {
                         try {
                             JSONArray teamsArray = response.getJSONArray("teams");
                             List<MLBTeams.Team> teams = new ArrayList<>();
-                            Log.d("repository", "JSON Array Length: " + teamsArray.length()); //706 elements
+                            Log.d("repository", "JSON Array Length: " + teamsArray.length());
 
                             for (int i = 0; i < teamsArray.length(); i++) {
                                 JSONObject teamJson = teamsArray.getJSONObject(i);
-                                Log.d("repository", "Parsing team at position " + i);
-//
-//
-//                                    // Extract data from the JSON object
-//                                    String name = teamJson.getString("name");
-//                                    String divisionName = teamJson.getJSONObject("division").getString("name");
-//
-//                                    MLBTeams.Division division = new MLBTeams.Division(divisionName);
-//
-//                                    division.name = divisionName;
-//
-//                                    String webPage = "http://gdx.mlb.com" + teamJson.getString("link");
 
-                                MLBTeams.Division division = new MLBTeams.Division("");
-                                String name = "";
-                                String webPage = "";
-                                    String stadiumName = teamJson.getJSONObject("venue").getString("name");
-                                    String stadiumAddress = teamJson.getJSONObject("venue").optString("address", "");
-                                    MLBTeams.Venue venue = new MLBTeams.Venue(stadiumName);
-                                    venue.address = stadiumAddress;
+                                String name = teamJson.getString("name");
+                                String webPage = teamJson.optString("link", "");
+                                String firstYearOfPlay = teamJson.optString("firstYearOfPlay", "");
 
-                                    String firstYearOfPlay = teamJson.getString("firstYearOfPlay");
+                                JSONObject venue = teamJson.getJSONObject("venue");
+                                String stadiumName = venue.optString("name", "");
+                                String stadiumAddress = venue.optString("address", "");
 
-                                    // Handle unknown leagues gracefully
-                                    String leagueName = teamJson.getJSONObject("league").getString("name");
-                                    MLBTeams.League league = getLeagueFromString(leagueName);
+                                // Check if "division" field exists before retrieving its value
+                                JSONObject division = teamJson.optJSONObject("division");
+                                String divisionName = (division != null) ? division.optString("name", "") : "";
 
-                                    MLBTeams.Team team = new MLBTeams.Team(name, webPage, venue, firstYearOfPlay, league, division);
-                                    Log.d("repository", "Added Team: " + team.name);
+                                JSONObject league = teamJson.getJSONObject("league");
+                                String leagueName = league.optString("name", "");
+
+                                MLBTeams.Division divisionObject = new MLBTeams.Division(divisionName);
+                                MLBTeams.Venue venueObject = new MLBTeams.Venue(stadiumName);
+                                venueObject.address = stadiumAddress;
+
+                                MLBTeams.League leagueObject = getLeagueFromString(leagueName);
+                                if (!leagueObject.equals(MLBTeams.League.UNKNOWN))
+                                {
+                                    MLBTeams.Team team = new MLBTeams.Team(name, webPage, venueObject, firstYearOfPlay, leagueObject, divisionObject);
                                     teams.add(team);
+                                    Log.d("repository", "Added Team: " + team.name + " || League: " + team.getLeague());
+                                }
+
                             }
 
-                            //reset allTeams list
+                            // Reset allTeams list
                             allTeams.clear();
                             allTeams.addAll(teams);
                             Log.d("repository", "allTeams size: " + allTeams.size());
-
                         } catch (JSONException e) {
                             // Handle JSON parsing error
+                            Log.e("repository", "JSON Parsing Error: " + e.getMessage());
                         }
                     }
                 },
@@ -107,12 +109,27 @@ public class TeamRepository {
         return liveData;
     }
 
+
     private MLBTeams.League getLeagueFromString(String leagueName) {
-        try {
-            return MLBTeams.League.valueOf(leagueName.replace(" ", "_").toUpperCase());
-        } catch (IllegalArgumentException e) {
-            // Handle unknown league names, you can return a default value here.
-            return MLBTeams.League.UNKNOWN;
+        String normalizedLeagueName = leagueName.toUpperCase();
+
+        // Define league-level mappings
+        Map<String, MLBTeams.League> leagueLevelMap = new HashMap<>();
+        leagueLevelMap.put("AMERICAN LEAGUE", MLBTeams.League.MLB);
+        leagueLevelMap.put("NATIONAL LEAGUE", MLBTeams.League.MLB);
+        leagueLevelMap.put("PACIFIC COAST LEAGUE", MLBTeams.League.TRIPLE_A);
+        leagueLevelMap.put("INTERNATIONAL LEAGUE", MLBTeams.League.TRIPLE_A);
+        leagueLevelMap.put("MEXICAN LEAGUE", MLBTeams.League.TRIPLE_A);
+        leagueLevelMap.put("EASTERN LEAGUE", MLBTeams.League.DOUBLE_A);
+        leagueLevelMap.put("SOUTHERN LEAGUE", MLBTeams.League.DOUBLE_A);
+        leagueLevelMap.put("TEXAS LEAGUE", MLBTeams.League.DOUBLE_A);
+
+        // Check if the leagueName exists in the map, and return the corresponding enum
+        if (leagueLevelMap.containsKey(normalizedLeagueName)) {
+            return leagueLevelMap.get(normalizedLeagueName);
         }
+
+        // Handle unknown league names, you can return a default value here.
+        return MLBTeams.League.UNKNOWN;
     }
 }

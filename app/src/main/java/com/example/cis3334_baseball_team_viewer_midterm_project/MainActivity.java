@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // Remove the observer when the activity is destroyed
-        viewModel.getTeams().removeObservers(this);
+        viewModel.getMLBTeams().removeObservers(this);
     }
 
     private void setUpTabListeners() {
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void observeData() {
-        viewModel.getTeams().observe(this, new Observer<List<MLBTeams.Team>>() {
+        viewModel.getMLBTeams().observe(this, new Observer<List<MLBTeams.Team>>() {
             @Override
             public void onChanged(List<MLBTeams.Team> teams) {
                 // Filter and display teams based on the selected league
