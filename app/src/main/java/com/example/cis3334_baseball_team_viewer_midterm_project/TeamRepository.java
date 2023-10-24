@@ -16,6 +16,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,14 +44,29 @@ public class TeamRepository {
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
-                            // Parse the JSON array response using Gson
-                            Team[] teams = gson.fromJson(response.toString(), Team[].class);
+                            List<Team> teams = new ArrayList<>();
 
-                            if (teams != null) {
-                                allTeams.clear(); // Clear the existing teams
-                                allTeams.addAll(Arrays.asList(teams)); // Add new teams
+                            // Iterate through the JSON array and create Team objects
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject teamJson = response.getJSONObject(i);
+
+                                // Extract data from the JSON object
+                                String name = teamJson.getString("name");
+                                String division = teamJson.getString("division");
+                                String firstYearOfPlay = teamJson.getString("firstYearOfPlay");
+                                String stadiumName = teamJson.getJSONObject("venue").getString("name");
+                                String webPage = teamJson.getString("link");
+                                String stadiumAddress = ""; // Extract stadium address from JSON if available
+                                Team.TeamLevel level = Team.TeamLevel.UNKNOWN; // Set the appropriate level based on your data
+
+                                // Create a Team object and add it to the list
+                                Team team = new Team(name, division, firstYearOfPlay, stadiumName, webPage, stadiumAddress, level);
+                                teams.add(team);
                             }
-                        } catch (JsonSyntaxException e) {
+
+                            allTeams.clear(); // Clear the existing teams
+                            allTeams.addAll(teams); // Add new teams
+                        } catch (JSONException e) {
                             // Handle JSON parsing error
                         }
                     }
