@@ -32,11 +32,11 @@ public class TeamViewHolder extends RecyclerView.ViewHolder
         buttonDirections = itemView.findViewById(R.id.buttonStadiumDirections);
     }
 
-    public void bindData(Team team)
+    public void bindData(MLBTeams.Team team)
     {
         // Set data from the 'team' object to the respective views
-        textViewName.setText(team.getName());
-        textViewStadium.setText(team.getStadiumName());
+        textViewName.setText(team.name);
+        textViewStadium.setText(team.venue.address);
 
         // You can set the 'imageViewLogo' here with an image based on 'team' data
         // For example: imageViewLogo.setImageResource(R.drawable.some_image);

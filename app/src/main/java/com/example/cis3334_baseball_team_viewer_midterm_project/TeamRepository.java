@@ -10,7 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -20,13 +20,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TeamRepository {
     private RequestQueue requestQueue;
     private Gson gson;
-    private List<Team> allTeams;
+    private List<MLBTeams.Team> allTeams;
 
     public TeamRepository(Context context) {
         requestQueue = Volley.newRequestQueue(context);
@@ -35,37 +34,58 @@ public class TeamRepository {
         Log.d("repository", "Repository Created");
     }
 
-    public LiveData<List<Team>> getTeamsFromAPI() {
+    public LiveData<List<MLBTeams.Team>> getTeamsFromAPI() {
         String apiUrl = "https://statsapi.mlb.com/api/v1/teams";
         Log.d("repository", "Accessing Data...");
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, apiUrl, null,
-                new Response.Listener<JSONArray>() {
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
                         try {
-                            List<Team> teams = new ArrayList<>();
+                            JSONArray teamsArray = response.getJSONArray("teams");
+                            List<MLBTeams.Team> teams = new ArrayList<>();
+                            Log.d("repository", "JSON Array Length: " + teamsArray.length()); //706 elements
 
-                            // Iterate through the JSON array and create Team objects
-                            for (int i = 0; i < response.length(); i++) {
-                                JSONObject teamJson = response.getJSONObject(i);
+                            for (int i = 0; i < teamsArray.length(); i++) {
+                                JSONObject teamJson = teamsArray.getJSONObject(i);
+                                Log.d("repository", "Parsing team at position " + i);
+//
+//
+//                                    // Extract data from the JSON object
+//                                    String name = teamJson.getString("name");
+//                                    String divisionName = teamJson.getJSONObject("division").getString("name");
+//
+//                                    MLBTeams.Division division = new MLBTeams.Division(divisionName);
+//
+//                                    division.name = divisionName;
+//
+//                                    String webPage = "http://gdx.mlb.com" + teamJson.getString("link");
 
-                                // Extract data from the JSON object
-                                String name = teamJson.getString("name");
-                                String division = teamJson.getString("division");
-                                String firstYearOfPlay = teamJson.getString("firstYearOfPlay");
-                                String stadiumName = teamJson.getJSONObject("venue").getString("name");
-                                String webPage = teamJson.getString("link");
-                                String stadiumAddress = ""; // Extract stadium address from JSON if available
-                                Team.TeamLevel level = Team.TeamLevel.UNKNOWN; // Set the appropriate level based on your data
+                                MLBTeams.Division division = new MLBTeams.Division("");
+                                String name = "";
+                                String webPage = "";
+                                    String stadiumName = teamJson.getJSONObject("venue").getString("name");
+                                    String stadiumAddress = teamJson.getJSONObject("venue").optString("address", "");
+                                    MLBTeams.Venue venue = new MLBTeams.Venue(stadiumName);
+                                    venue.address = stadiumAddress;
 
-                                // Create a Team object and add it to the list
-                                Team team = new Team(name, division, firstYearOfPlay, stadiumName, webPage, stadiumAddress, level);
-                                teams.add(team);
+                                    String firstYearOfPlay = teamJson.getString("firstYearOfPlay");
+
+                                    // Handle unknown leagues gracefully
+                                    String leagueName = teamJson.getJSONObject("league").getString("name");
+                                    MLBTeams.League league = getLeagueFromString(leagueName);
+
+                                    MLBTeams.Team team = new MLBTeams.Team(name, webPage, venue, firstYearOfPlay, league, division);
+                                    Log.d("repository", "Added Team: " + team.name);
+                                    teams.add(team);
                             }
 
-                            allTeams.clear(); // Clear the existing teams
-                            allTeams.addAll(teams); // Add new teams
+                            //reset allTeams list
+                            allTeams.clear();
+                            allTeams.addAll(teams);
+                            Log.d("repository", "allTeams size: " + allTeams.size());
+
                         } catch (JSONException e) {
                             // Handle JSON parsing error
                         }
@@ -79,23 +99,20 @@ public class TeamRepository {
                 }
         );
 
-        requestQueue.add(jsonArrayRequest);
+        requestQueue.add(jsonObjectRequest);
 
         // Create LiveData for allTeams and return it
-        MutableLiveData<List<Team>> liveData = new MutableLiveData<>();
+        MutableLiveData<List<MLBTeams.Team>> liveData = new MutableLiveData<>();
         liveData.setValue(allTeams);
         return liveData;
     }
 
-    public List<Team> getTeamsByLevel(Team.TeamLevel level) {
-        List<Team> teamsByLevel = new ArrayList<>();
-
-        for (Team team : allTeams) {
-            if (team.getLevel() == level) {
-                teamsByLevel.add(team);
-            }
+    private MLBTeams.League getLeagueFromString(String leagueName) {
+        try {
+            return MLBTeams.League.valueOf(leagueName.replace(" ", "_").toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Handle unknown league names, you can return a default value here.
+            return MLBTeams.League.UNKNOWN;
         }
-
-        return teamsByLevel;
     }
 }

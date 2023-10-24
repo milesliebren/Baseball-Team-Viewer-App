@@ -12,8 +12,8 @@ import java.util.List;
 
 public class MainViewModel extends AndroidViewModel {
     private TeamRepository teamRepository;
-    private LiveData<List<Team>> allTeams;
-    private MediatorLiveData<List<Team>> currentTeams;
+    private LiveData<List<MLBTeams.Team>> allTeams;
+    private MediatorLiveData<List<MLBTeams.Team>> currentTeams;
 
     public MainViewModel(Application application)
     {
@@ -28,15 +28,15 @@ public class MainViewModel extends AndroidViewModel {
 
     }
 
-    public LiveData<List<Team>> getTeams()
+    public LiveData<List<MLBTeams.Team>> getTeams()
     {
         return currentTeams;
     }
 
-    public void switchToLevel(Team.TeamLevel level)
+    public void switchToLevel(MLBTeams.League league)
     {
         // Filter the teams based on the selected level and update currentTeams
-        List<Team> teamsByLevel = teamRepository.getTeamsByLevel(level);
+        List<MLBTeams.Team> teamsByLevel = teamRepository.getTeamsFromAPI().getValue();
         currentTeams.setValue(teamsByLevel);
     }
 }

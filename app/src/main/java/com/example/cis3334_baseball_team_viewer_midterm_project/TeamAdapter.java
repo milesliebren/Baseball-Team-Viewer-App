@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
 {
-    List<Team> mlbTeams = new ArrayList<Team>();
+    List<MLBTeams.Team> mlbTeams = new ArrayList<MLBTeams.Team>();
     public TeamAdapter(Application application, MainViewModel mainViewModel)
     {
         mlbTeams = new ArrayList<>();
@@ -28,7 +28,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
     @Override
     public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
         // Bind data to the ViewHolder here
-        Team team = mlbTeams.get(position);
+        MLBTeams.Team team = mlbTeams.get(position);
         holder.bindData(team);
     }
 
@@ -37,7 +37,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
         return 0;
     }
 
-    public void submitList(@NonNull List<Team> teams)
+    public void submitList(@NonNull List<MLBTeams.Team> teams)
     {
         this.mlbTeams = teams;
     }
