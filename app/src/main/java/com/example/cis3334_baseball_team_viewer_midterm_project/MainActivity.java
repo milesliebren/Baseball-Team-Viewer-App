@@ -2,6 +2,7 @@ package com.example.cis3334_baseball_team_viewer_midterm_project;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         textViewStatus = findViewById(R.id.textViewStatus);
+
         recyclerView.setAdapter(teamAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // Remove the observer when the activity is destroyed
-        viewModel.getMLBTeams().removeObservers(this);
+        viewModel.getLiveMLBTeams().removeObservers(this);
     }
 
     private void setUpTabListeners() {
@@ -68,9 +70,10 @@ public class MainActivity extends AppCompatActivity {
                         selectedLeague = MLBTeams.League.DOUBLE_A;
                         break;
                 }
-
+                Log.d("mainActivity", "Selected League: " + selectedLeague);
                 // Update the teams based on the selected league
                 viewModel.switchToLevel(selectedLeague);
+
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -81,19 +84,21 @@ public class MainActivity extends AppCompatActivity {
                 // Handle reselected tab if needed
             }
         };
-
+        Log.d("MainActivity", "Selected league: " + selectedLeague);
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
     }
 
     public void observeData() {
-        viewModel.getMLBTeams().observe(this, new Observer<List<MLBTeams.Team>>() {
+        viewModel.getLiveMLBTeams().observe(this, new Observer<List<MLBTeams.Team>>() {
             @Override
             public void onChanged(List<MLBTeams.Team> teams) {
                 // Filter and display teams based on the selected league
                 List<MLBTeams.Team> filteredTeams = filterTeamsByLeague(teams, selectedLeague);
                 teamAdapter.submitList(filteredTeams);
+                Log.d("MainActivity", "Number of filtered teams: " + filteredTeams.size());
             }
         });
+
     }
 
     private List<MLBTeams.Team> filterTeamsByLeague(List<MLBTeams.Team> teams, MLBTeams.League league) {
