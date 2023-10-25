@@ -29,6 +29,7 @@ public class TeamRepository {
     private RequestQueue requestQueue;
     private Gson gson;
     private List<MLBTeams.Team> allTeams;
+    VenueAddressUpdater vau;
 
     public TeamRepository(Context context) {
         requestQueue = Volley.newRequestQueue(context);
@@ -39,7 +40,7 @@ public class TeamRepository {
 
     public LiveData<List<MLBTeams.Team>> getTeamsFromAPI() {
         String apiUrl = "https://statsapi.mlb.com/api/v1/teams";
-        Log.d("repository", "Accessing Data...");
+        Log.d("repository", "Accessing Data..." + apiUrl);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, apiUrl, null,
@@ -74,7 +75,7 @@ public class TeamRepository {
                                 MLBTeams.Venue venueObject = new MLBTeams.Venue(stadiumName, stadiumAddress);
                                 venueObject.setAddress(stadiumAddress);
 
-                                //Log.d("repository", "Added Venue: " + venueObject.name + venueObject.getAddress());
+                                Log.d("repository", "Added Venue: " + venueObject.name + venueObject.getAddress());
 
                                 MLBTeams.League leagueObject = getLeagueFromString(leagueName);
 
@@ -82,13 +83,16 @@ public class TeamRepository {
                                     String webPage = getLink(name, leagueObject);
                                     MLBTeams.Team team = new MLBTeams.Team(name, webPage, venueObject, firstYearOfPlay, leagueObject, divisionObject);
                                     teams.add(team);
+                                    Log.d("repository", "Added team: " + team.name);
+                                    updateVenueAddressesForTeam(team);
                                 }
                             }
 
                             // Reset allTeams list
                             allTeams.clear();
                             allTeams.addAll(teams);
-                            //Log.d("repository", "allTeams size: " + allTeams.size());
+
+                            Log.d("repository", "allTeams size: " + allTeams.size());
                         } catch (JSONException e) {
                             // Handle JSON parsing error
                             Log.e("repository", "JSON Parsing Error: " + e.getMessage());
@@ -107,8 +111,6 @@ public class TeamRepository {
 
         // Create LiveData for allTeams and return it
         MutableLiveData<List<MLBTeams.Team>> liveData = new MutableLiveData<>();
-
-        updateVenueAddressesForTeams(allTeams);
 
         liveData.setValue(allTeams);
         return liveData;
@@ -157,21 +159,20 @@ public class TeamRepository {
         // Handle unknown league names
         return MLBTeams.League.UNKNOWN;
     }
-    private void updateVenueAddressesForTeams(List<MLBTeams.Team> teams)
-    {
-        Log.d("repository", "Updating venue addresses...");
-        for (MLBTeams.Team team : teams) {
-            String locationName = team.venue.name;
-            if (locationName != null && !locationName.isEmpty()) {
-                // Use VenueAddressUpdater to get the address and update the venue
-                if (VenueAddressUpdater.updateVenueAddress(team.venue, locationName)) {
-                    // Log success or handle errors
-                    Log.d("TeamRepository", "Updated address for venue: " + team.venue.address);
-                } else
-                {
-                    Log.e("TeamRepository", "Failed to update address for venue: " + team.venue.name);
-                }
+    public void updateVenueAddressesForTeam(MLBTeams.Team team) {
+        VenueAddressUpdater venueAddressUpdater = new VenueAddressUpdater();
+        venueAddressUpdater.updateVenueAddressAsync(team.venue, team.venue.name, new VenueAddressUpdater.AddressUpdateListener() {
+            @Override
+            public void onAddressUpdated(MLBTeams.Venue venue, String address) {
+                venue.setAddress(address);
+                Log.d("VAU", "Updated address for " + address);
             }
-        }
+
+            @Override
+            public void onError(String errorMessage) {
+                // Handle the error, if necessary
+                Log.e("VAU", errorMessage);
+            }
+        });
     }
 }
