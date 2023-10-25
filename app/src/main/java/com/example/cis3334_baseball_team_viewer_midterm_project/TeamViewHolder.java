@@ -11,12 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.NavigableMap;
+
 public class TeamViewHolder extends RecyclerView.ViewHolder {
     private TextView textViewName;
     private TextView textViewDivision;
     private TextView textViewFirstYearOfPlay;
     private TextView textViewStadium;
-    //private ImageView imageViewLogo;
     public Button buttonWebsite;
     public Button buttonDirections;
     public Button buttonRoster;
@@ -32,7 +33,6 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
         buttonDirections = itemView.findViewById(R.id.buttonStadiumDirections);
         buttonWebsite = itemView.findViewById(R.id.buttonWebsite);
 
-
         // Set click listeners for the buttons
         buttonWebsite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,10 +42,9 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
         });
 
         buttonDirections.setOnClickListener(new View.OnClickListener() {
+            Uri location = Uri.parse("geo:0,0?q=" + team.venue.address);
             @Override
-            public void onClick(View v) {
-                openMap(Uri.parse(team.venue.address));
-            }
+            public void onClick(View v) {openMap(location);}
         });
         buttonRoster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +63,10 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void openMap(Uri location) {
+    public void openMap(Uri location)
+    {
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
-        Log.d("viewHolder","Opening map: " + location);
+        Log.d("viewHolder2","Opening Map: " + location);
         if (mapIntent.resolveActivity(itemView.getContext().getPackageManager()) != null) {
             itemView.getContext().startActivity(mapIntent);
         }
@@ -75,21 +75,7 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     public void bindData(MLBTeams.Team team) {
         textViewName.setText(team.name);
         textViewDivision.setText(team.division.name);
-        textViewFirstYearOfPlay.setText("Established In: " + team.firstYearOfPlay);
+        textViewFirstYearOfPlay.setText("Est." + team.firstYearOfPlay);
         textViewStadium.setText(team.venue.name);
-
-        buttonWebsite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openWebPage(team.link);
-            }
-        });
-
-        buttonDirections.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMap(Uri.parse(team.venue.address));
-            }
-        });
     }
 }

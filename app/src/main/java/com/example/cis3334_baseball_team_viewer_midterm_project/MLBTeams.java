@@ -33,10 +33,21 @@ public class MLBTeams {
     public static class Venue {
         public String address;
         public String name;
-        public Venue(String name)
+        public String id;
+        public Venue(String name, String address)
         {
             this.name = name;
+            this.address = address;
         }
+        public void setAddress(String address)
+        {
+            this.address = address;
+        }
+        public String getAddress()
+        {
+            return address;
+        }
+
     }
 
     public static class Division {

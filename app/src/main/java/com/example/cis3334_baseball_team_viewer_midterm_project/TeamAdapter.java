@@ -30,20 +30,6 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
     public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
         MLBTeams.Team team = mlbTeams.get(position);
         holder.bindData(team);
-
-        holder.buttonWebsite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.openWebPage(team.link);
-            }
-        });
-
-        holder.buttonDirections.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.openMap(Uri.parse(team.venue.address));
-            }
-        });
     }
 
     @Override
