@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 public class TeamViewHolder extends RecyclerView.ViewHolder {
     private TextView textViewName;
     private TextView textViewDivision;
