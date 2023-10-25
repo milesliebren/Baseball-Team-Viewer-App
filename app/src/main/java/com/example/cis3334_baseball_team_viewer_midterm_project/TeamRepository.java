@@ -107,7 +107,9 @@ public class TeamRepository {
 
         // Create LiveData for allTeams and return it
         MutableLiveData<List<MLBTeams.Team>> liveData = new MutableLiveData<>();
+
         updateVenueAddressesForTeams(allTeams);
+
         liveData.setValue(allTeams);
         return liveData;
     }
@@ -147,24 +149,27 @@ public class TeamRepository {
         leagueLevelMap.put("SOUTHERN LEAGUE", MLBTeams.League.DOUBLE_A);
         leagueLevelMap.put("TEXAS LEAGUE", MLBTeams.League.DOUBLE_A);
 
-        // Check if the leagueName exists in the map, and return the corresponding enum
+        // Check if the leagueName exists in the map
         if (leagueLevelMap.containsKey(normalizedLeagueName)) {
             return leagueLevelMap.get(normalizedLeagueName);
         }
 
-        // Handle unknown league names, you can return a default value here.
+        // Handle unknown league names
         return MLBTeams.League.UNKNOWN;
     }
-    private void updateVenueAddressesForTeams(List<MLBTeams.Team> teams) {
+    private void updateVenueAddressesForTeams(List<MLBTeams.Team> teams)
+    {
+        Log.d("repository", "Updating venue addresses...");
         for (MLBTeams.Team team : teams) {
-            String locationName = team.venue.name; // or you may use another field to specify the location name
+            String locationName = team.venue.name;
             if (locationName != null && !locationName.isEmpty()) {
                 // Use VenueAddressUpdater to get the address and update the venue
                 if (VenueAddressUpdater.updateVenueAddress(team.venue, locationName)) {
                     // Log success or handle errors
                     Log.d("TeamRepository", "Updated address for venue: " + team.venue.address);
-                } else {
-                    // Handle errors, e.g., address not found for the location name
+                } else
+                {
+                    Log.e("TeamRepository", "Failed to update address for venue: " + team.venue.name);
                 }
             }
         }

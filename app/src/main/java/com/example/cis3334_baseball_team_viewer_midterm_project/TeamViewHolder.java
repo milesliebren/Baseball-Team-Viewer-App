@@ -57,7 +57,7 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     public void openWebPage(String url) {
         Uri webpage = Uri.parse(url);
         Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
-        Log.d("viewHolder","Opening web page: " + webpage);
+        Log.d("viewHolderWebPage","Opening web page: " + webpage);
         if (webIntent.resolveActivity(itemView.getContext().getPackageManager()) != null) {
             itemView.getContext().startActivity(webIntent);
         }
@@ -66,7 +66,7 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     public void openMap(Uri location)
     {
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
-        Log.d("viewHolder2","Opening Map: " + location);
+        Log.d("viewHolderMap","Opening Map: " + location);
         if (mapIntent.resolveActivity(itemView.getContext().getPackageManager()) != null) {
             itemView.getContext().startActivity(mapIntent);
         }
