@@ -29,14 +29,14 @@ public class TeamRepository {
     private RequestQueue requestQueue;
     private Gson gson;
     private List<MLBTeams.Team> allTeams;
-    private VenueAddressProvider vap;
+
     public TeamRepository(Context context) {
         requestQueue = Volley.newRequestQueue(context);
         gson = new Gson();
         allTeams = new ArrayList<>();
         Log.d("repository", "Repository Created");
-        vap = new VenueAddressProvider(context);
     }
+
     public LiveData<List<MLBTeams.Team>> getTeamsFromAPI() {
         String apiUrl = "https://statsapi.mlb.com/api/v1/teams";
         Log.d("repository", "Accessing Data...");
@@ -59,7 +59,6 @@ public class TeamRepository {
                                 String firstYearOfPlay = teamJson.optString("firstYearOfPlay", "");
 
 
-
                                 // Check if "division" field exists before retrieving its value
                                 JSONObject division = teamJson.optJSONObject("division");
                                 String divisionName = (division != null) ? division.optString("name", "") : "";
@@ -79,8 +78,7 @@ public class TeamRepository {
 
                                 MLBTeams.League leagueObject = getLeagueFromString(leagueName);
 
-                                if (!leagueObject.equals(MLBTeams.League.UNKNOWN))
-                                {
+                                if (!leagueObject.equals(MLBTeams.League.UNKNOWN)) {
                                     String webPage = getLink(name, leagueObject);
                                     MLBTeams.Team team = new MLBTeams.Team(name, webPage, venueObject, firstYearOfPlay, leagueObject, divisionObject);
                                     teams.add(team);
@@ -113,30 +111,28 @@ public class TeamRepository {
         liveData.setValue(allTeams);
         return liveData;
     }
-    private String getLink(String name, MLBTeams.League league)
-    {
-        if (league.equals(MLBTeams.League.MLB))
-        {
+
+    private String getLink(String name, MLBTeams.League league) {
+        if (league.equals(MLBTeams.League.MLB)) {
             String[] nameStringArray = name.toLowerCase().replace(" ", "-").split("-");
             String regName = nameStringArray[nameStringArray.length - 1];
 
             //get special cases
-                if (name.equalsIgnoreCase("Boston Red Sox"))
-                    regName = "redsox";
-                 else if (name.equalsIgnoreCase("Chicago White Sox"))
-                    regName = "whitesox";
-                else if (regName.equalsIgnoreCase("jays"))
-                    regName = "bluejays";
+            if (name.equalsIgnoreCase("Boston Red Sox"))
+                regName = "redsox";
+            else if (name.equalsIgnoreCase("Chicago White Sox"))
+                regName = "whitesox";
+            else if (regName.equalsIgnoreCase("jays"))
+                regName = "bluejays";
 
             //Log.d("repository", "Binding Page: \"https://www.mlb.com/" + regName);
             return "https://www.mlb.com/" + regName; //get last word in the name (i.e. Cincinnati Reds => Reds)
-        }
-        else
-        {
+        } else {
             //Log.d("repository","Binding page: " + "https://www.milb.com/" + name.toLowerCase().replace(" ", "-"));
             return "https://www.milb.com/" + name.toLowerCase().replace(" ", "-");
         }
     }
+
     private MLBTeams.League getLeagueFromString(String leagueName) {
         String normalizedLeagueName = leagueName.toUpperCase();
 
@@ -159,9 +155,4 @@ public class TeamRepository {
         // Handle unknown league names, you can return a default value here.
         return MLBTeams.League.UNKNOWN;
     }
-//    public void updateVenueAddressesForTeams(List<MLBTeams.Team> teams) {
-//        for (MLBTeams.Team team : teams) {
-//            vap.getVenueAddressAndUpdateMLBTeamAddress(team);
-//        }
-//    }
 }
