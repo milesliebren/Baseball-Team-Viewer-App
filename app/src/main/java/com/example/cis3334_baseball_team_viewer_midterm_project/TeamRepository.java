@@ -107,7 +107,7 @@ public class TeamRepository {
 
         // Create LiveData for allTeams and return it
         MutableLiveData<List<MLBTeams.Team>> liveData = new MutableLiveData<>();
-        //updateVenueAddressesForTeams(allTeams);
+        updateVenueAddressesForTeams(allTeams);
         liveData.setValue(allTeams);
         return liveData;
     }
@@ -154,5 +154,19 @@ public class TeamRepository {
 
         // Handle unknown league names, you can return a default value here.
         return MLBTeams.League.UNKNOWN;
+    }
+    private void updateVenueAddressesForTeams(List<MLBTeams.Team> teams) {
+        for (MLBTeams.Team team : teams) {
+            String locationName = team.venue.name; // or you may use another field to specify the location name
+            if (locationName != null && !locationName.isEmpty()) {
+                // Use VenueAddressUpdater to get the address and update the venue
+                if (VenueAddressUpdater.updateVenueAddress(team.venue, locationName)) {
+                    // Log success or handle errors
+                    Log.d("TeamRepository", "Updated address for venue: " + team.venue.address);
+                } else {
+                    // Handle errors, e.g., address not found for the location name
+                }
+            }
+        }
     }
 }
