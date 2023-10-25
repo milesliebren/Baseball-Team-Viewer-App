@@ -36,8 +36,6 @@ public class MLBTeams {
         public Venue(String name)
         {
             this.name = name;
-            //TODO: initialize address here
-            this.address = "FILLER";
         }
     }
 
