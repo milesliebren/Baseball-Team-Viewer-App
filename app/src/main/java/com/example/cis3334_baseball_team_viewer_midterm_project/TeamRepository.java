@@ -55,7 +55,7 @@ public class TeamRepository {
                                 JSONObject teamJson = teamsArray.getJSONObject(i);
 
                                 String name = teamJson.getString("name");
-                                String webPage = teamJson.optString("link", "");
+
                                 String firstYearOfPlay = teamJson.optString("firstYearOfPlay", "");
 
                                 JSONObject venue = teamJson.getJSONObject("venue");
@@ -74,19 +74,19 @@ public class TeamRepository {
                                 venueObject.address = stadiumAddress;
 
                                 MLBTeams.League leagueObject = getLeagueFromString(leagueName);
+
                                 if (!leagueObject.equals(MLBTeams.League.UNKNOWN))
                                 {
+                                    String webPage = getLink(name, leagueObject);
                                     MLBTeams.Team team = new MLBTeams.Team(name, webPage, venueObject, firstYearOfPlay, leagueObject, divisionObject);
                                     teams.add(team);
-                                    Log.d("repository", "Added Team: " + team.name + " || League: " + team.getLeague());
                                 }
-
                             }
 
                             // Reset allTeams list
                             allTeams.clear();
                             allTeams.addAll(teams);
-                            Log.d("repository", "allTeams size: " + allTeams.size());
+                            //Log.d("repository", "allTeams size: " + allTeams.size());
                         } catch (JSONException e) {
                             // Handle JSON parsing error
                             Log.e("repository", "JSON Parsing Error: " + e.getMessage());
@@ -107,6 +107,31 @@ public class TeamRepository {
         MutableLiveData<List<MLBTeams.Team>> liveData = new MutableLiveData<>();
         liveData.setValue(allTeams);
         return liveData;
+    }
+
+    private String getLink(String name, MLBTeams.League league)
+    {
+        if (league.equals(MLBTeams.League.MLB))
+        {
+            String[] nameStringArray = name.toLowerCase().replace(" ", "-").split("-");
+            String regName = nameStringArray[nameStringArray.length - 1];
+
+            //get special cases
+                if (name.equalsIgnoreCase("Boston Red Sox"))
+                    regName = "redsox";
+                 else if (name.equalsIgnoreCase("Chicago White Sox"))
+                    regName = "whitesox";
+                else if (regName.equalsIgnoreCase("jays"))
+                    regName = "bluejays";
+
+            Log.d("repository", "Binding Page: \"https://www.mlb.com/" + regName);
+            return "https://www.mlb.com/" + regName; //get last word in the name (i.e. Cincinnati Reds => Reds)
+        }
+        else
+        {
+            Log.d("repository","Binding page: " + "https://www.milb.com/" + name.toLowerCase().replace(" ", "-"));
+            return "https://www.milb.com/" + name.toLowerCase().replace(" ", "-");
+        }
     }
 
 

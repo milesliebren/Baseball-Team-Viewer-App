@@ -3,6 +3,7 @@ package com.example.cis3334_baseball_team_viewer_midterm_project;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.app.Application;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +23,27 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
     public TeamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view, parent, false);
-        return new TeamViewHolder(view);
+        return new TeamViewHolder(view, mlbTeams.get(viewType));
     }
 
     @Override
     public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
-        // Bind data to the ViewHolder here
         MLBTeams.Team team = mlbTeams.get(position);
         holder.bindData(team);
+
+        holder.buttonWebsite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.openWebPage(team.link);
+            }
+        });
+
+        holder.buttonDirections.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.openMap(Uri.parse(team.venue.address));
+            }
+        });
     }
 
     @Override

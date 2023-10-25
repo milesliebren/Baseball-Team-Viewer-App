@@ -22,7 +22,6 @@ public class MainViewModel extends AndroidViewModel {
 
         mlbTeamsLiveData = new MutableLiveData<>();
     }
-
     public LiveData<List<MLBTeams.Team>> getLiveMLBTeams() {
         return mlbTeamsLiveData;
     }
@@ -35,8 +34,6 @@ public class MainViewModel extends AndroidViewModel {
                 filteredTeams.add(team);
             }
         }
-        Log.d("MainViewModel", "Number of filtered teams: " + filteredTeams.size());
-
         mlbTeamsLiveData.setValue(filteredTeams);
     }
 }

@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
-        Log.d("MainActivity", "Selected league: " + selectedLeague);
+        //Log.d("MainActivity", "Selected league: " + selectedLeague);
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
     }
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 List<MLBTeams.Team> filteredTeams = filterTeamsByLeague(teams, selectedLeague);
                 teamAdapter.submitList(filteredTeams);
                 teamAdapter.notifyDataSetChanged();
-                Log.d("MainActivity", "Number of filtered teams: " + filteredTeams.size());
+                //Log.d("MainActivity", "Number of filtered teams: " + filteredTeams.size());
             }
         });
 

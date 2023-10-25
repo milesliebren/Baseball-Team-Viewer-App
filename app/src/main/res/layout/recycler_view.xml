@@ -5,56 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageViewLogo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <TextView
         android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
         android:text="Team Name"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textViewDivision"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="12dp"
-        android:text="Division"
-        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
-        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
-
-    <TextView
-        android:id="@+id/textViewFirstYearOfPLay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:text="Est."
-        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDivision" />
-
     <Button
-        android:id="@+id/buttonRoster"
+        android:id="@+id/buttonWebsite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:text="Roster"
-        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStadium" />
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="96dp"
+        android:text="Website"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonStadiumDirections"
@@ -63,23 +33,47 @@
         android:layout_marginStart="12dp"
         android:text="Directions"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.111"
-        app:layout_constraintStart_toEndOf="@+id/buttonRoster"
-        app:layout_constraintTop_toTopOf="@+id/buttonRoster" />
+        app:layout_constraintHorizontal_bias="0.525"
+        app:layout_constraintStart_toEndOf="@+id/buttonWebsite"
+        app:layout_constraintTop_toTopOf="@+id/buttonWebsite" />
+
+    <TextView
+        android:id="@+id/textViewFirstYearOfPLay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="Est."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.082"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewDivision"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="Division"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.621"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewStadium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
         android:text="Stadium"
-        app:layout_constraintStart_toEndOf="@+id/imageViewLogo"
-        app:layout_constraintTop_toBottomOf="@+id/textViewFirstYearOfPLay" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.626"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Space
         android:layout_width="413dp"
         android:layout_height="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
+        tools:layout_editor_absoluteY="150dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
