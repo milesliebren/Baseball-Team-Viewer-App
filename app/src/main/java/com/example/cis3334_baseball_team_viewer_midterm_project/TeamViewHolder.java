@@ -21,6 +21,7 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     //private ImageView imageViewLogo;
     public Button buttonWebsite;
     public Button buttonDirections;
+    public Button buttonRoster;
 
     public TeamViewHolder(@NonNull View itemView, MLBTeams.Team team) {
         super(itemView);
@@ -28,14 +29,13 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
         textViewDivision = itemView.findViewById(R.id.textViewDivision);
         textViewFirstYearOfPlay = itemView.findViewById(R.id.textViewFirstYearOfPLay);
         textViewStadium = itemView.findViewById(R.id.textViewStadium);
-        //imageViewLogo = itemView.findViewById(R.id.imageViewLogo);
+        buttonRoster = itemView.findViewById(R.id.buttonRoster);
         buttonWebsite = itemView.findViewById(R.id.buttonWebsite);
         buttonDirections = itemView.findViewById(R.id.buttonStadiumDirections);
         buttonWebsite = itemView.findViewById(R.id.buttonWebsite);
 
 
         // Set click listeners for the buttons
-
         buttonWebsite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,6 +47,12 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 openMap(Uri.parse(team.venue.address));
+            }
+        });
+        buttonRoster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWebPage(Uri.parse(team.link) + "/roster");
             }
         });
     }
