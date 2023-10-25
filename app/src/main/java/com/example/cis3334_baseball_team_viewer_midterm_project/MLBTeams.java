@@ -33,7 +33,6 @@ public class MLBTeams {
     public static class Venue {
         public String address;
         public String name;
-        public String id;
         public Venue(String name, String address)
         {
             this.name = name;
@@ -42,10 +41,6 @@ public class MLBTeams {
         public void setAddress(String address)
         {
             this.address = address;
-        }
-        public String getAddress()
-        {
-            return address;
         }
 
     }

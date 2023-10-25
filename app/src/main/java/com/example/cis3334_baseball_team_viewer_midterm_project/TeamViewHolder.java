@@ -21,9 +21,9 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     public Button buttonWebsite;
     public Button buttonDirections;
     public Button buttonRoster;
-    public TeamRepository repository;
+    public MLBTeams.Team team;
 
-    public TeamViewHolder(@NonNull View itemView, MLBTeams.Team team) {
+    public TeamViewHolder(@NonNull View itemView) {
         super(itemView);
         textViewName = itemView.findViewById(R.id.textViewName);
         textViewDivision = itemView.findViewById(R.id.textViewDivision);
@@ -33,7 +33,6 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
         buttonWebsite = itemView.findViewById(R.id.buttonWebsite);
         buttonDirections = itemView.findViewById(R.id.buttonStadiumDirections);
         buttonWebsite = itemView.findViewById(R.id.buttonWebsite);
-        repository = new TeamRepository(itemView.getContext());
 
         // Set click listeners for the buttons
         buttonWebsite.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +89,7 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindData(MLBTeams.Team team) {
+        this.team = team;
         textViewName.setText(team.name);
         textViewDivision.setText(team.division.name);
         textViewFirstYearOfPlay.setText("Est." + team.firstYearOfPlay);

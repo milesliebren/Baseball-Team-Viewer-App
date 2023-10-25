@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
 {
-    List<MLBTeams.Team> mlbTeams = new ArrayList<MLBTeams.Team>();
+    List<MLBTeams.Team> mlbTeams;
     public TeamAdapter(Application application, MainViewModel mainViewModel)
     {
         mlbTeams = new ArrayList<>();
@@ -23,7 +23,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamViewHolder>
     public TeamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view, parent, false);
-        return new TeamViewHolder(view, mlbTeams.get(viewType));
+        return new TeamViewHolder(view);
     }
 
     @Override
