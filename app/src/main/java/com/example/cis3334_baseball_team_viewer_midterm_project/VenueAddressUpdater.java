@@ -19,19 +19,15 @@ public class VenueAddressUpdater {
         OPENSTREETMAP_API_BASE = "https://nominatim.openstreetmap.org/search";
         Log.d("VAU", "VAU Created...");
     }
-    public interface AddressUpdateListener
-    {
-        void onAddressUpdated(MLBTeams.Venue venue, String address);
-        void onError(String errorMessage);
-    }
 
-    public void updateVenueAddressAsync(MLBTeams.Venue venue, String locationName, AddressUpdateListener listener) {
+
+    public static void updateVenueAddressAsync(MLBTeams.Venue venue, String locationName, VenueAddressUpdateListener listener) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 HttpURLConnection conn = null;
                 BufferedReader reader = null;
-                Log.d("VAU", "Update Address Method Called.");
+                //Log.d("VAU", "Update Address Method Called.");
                 try {
                     // Construct the URL for the OpenStreetMap Nominatim API
                     String encodedLocationName = URLEncoder.encode(locationName, "UTF-8");
@@ -48,6 +44,7 @@ public class VenueAddressUpdater {
                     while ((line = reader.readLine()) != null) {
                         response.append(line);
                     }
+                    Log.d("VAU", "Response: " + response);
 
                     // Parse the JSON response
                     JSONArray resultsArray = new JSONArray(response.toString());
@@ -57,7 +54,7 @@ public class VenueAddressUpdater {
                         String address = firstResult.optString("display_name", "");
 
                         // Notify the listener with the updated address
-                        listener.onAddressUpdated(venue, address);
+                        listener.onVenueAddressUpdated(address);
                     } else {
                         // Handle no results found
                         listener.onError("No results found for location name: " + locationName);
@@ -82,3 +79,5 @@ public class VenueAddressUpdater {
         }.execute();
     }
 }
+
+

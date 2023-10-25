@@ -21,6 +21,7 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     public Button buttonWebsite;
     public Button buttonDirections;
     public Button buttonRoster;
+    public TeamRepository repository;
 
     public TeamViewHolder(@NonNull View itemView, MLBTeams.Team team) {
         super(itemView);
@@ -32,6 +33,7 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
         buttonWebsite = itemView.findViewById(R.id.buttonWebsite);
         buttonDirections = itemView.findViewById(R.id.buttonStadiumDirections);
         buttonWebsite = itemView.findViewById(R.id.buttonWebsite);
+        repository = new TeamRepository(itemView.getContext());
 
         // Set click listeners for the buttons
         buttonWebsite.setOnClickListener(new View.OnClickListener() {
@@ -42,10 +44,25 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
         });
 
         buttonDirections.setOnClickListener(new View.OnClickListener() {
-            Uri location = Uri.parse("geo:0,0?q=" + team.venue.address);
             @Override
-            public void onClick(View v) {openMap(location);}
+            public void onClick(View v) {
+                // Request to update the venue address
+                updateVenueAddressForTeam(team, new VenueAddressUpdateListener() {
+                    @Override
+                    public void onVenueAddressUpdated(String address) {
+                        // Address is updated, open the map with the updated address
+                        openMap(Uri.parse("geo:0,0?q=" + address));
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Handle the error if needed
+                        Log.e("Directions", "Error updating venue address: " + errorMessage);
+                    }
+                });
+            }
         });
+
         buttonRoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +83,8 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
     public void openMap(Uri location)
     {
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);
-        Log.d("viewHolderMap","Opening Map: " + location);
         if (mapIntent.resolveActivity(itemView.getContext().getPackageManager()) != null) {
+            Log.d("viewHolderMap","Opening Map: " + location);
             itemView.getContext().startActivity(mapIntent);
         }
     }
@@ -78,4 +95,22 @@ public class TeamViewHolder extends RecyclerView.ViewHolder {
         textViewFirstYearOfPlay.setText("Est." + team.firstYearOfPlay);
         textViewStadium.setText(team.venue.name);
     }
+
+    public void updateVenueAddressForTeam(MLBTeams.Team team, VenueAddressUpdateListener listener) {
+        VenueAddressUpdater venueAddressUpdater = new VenueAddressUpdater();
+        venueAddressUpdater.updateVenueAddressAsync(team.venue, team.venue.name, new VenueAddressUpdateListener() {
+            @Override
+            public void onVenueAddressUpdated(String address) {
+                team.venue.setAddress(address);
+                Log.d("repository", "Updating Address for venue: " + team.venue.name + " | " + team.venue.address);
+                listener.onVenueAddressUpdated(team.venue.address);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                listener.onError(errorMessage);
+            }
+        });
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.cis3334_baseball_team_viewer_midterm_project;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TeamRepository {
     private RequestQueue requestQueue;
@@ -59,7 +61,6 @@ public class TeamRepository {
 
                                 String firstYearOfPlay = teamJson.optString("firstYearOfPlay", "");
 
-
                                 // Check if "division" field exists before retrieving its value
                                 JSONObject division = teamJson.optJSONObject("division");
                                 String divisionName = (division != null) ? division.optString("name", "") : "";
@@ -75,7 +76,7 @@ public class TeamRepository {
                                 MLBTeams.Venue venueObject = new MLBTeams.Venue(stadiumName, stadiumAddress);
                                 venueObject.setAddress(stadiumAddress);
 
-                                Log.d("repository", "Added Venue: " + venueObject.name + venueObject.getAddress());
+                                //Log.d("repository", "Added Venue: " + venueObject.name + venueObject.getAddress());
 
                                 MLBTeams.League leagueObject = getLeagueFromString(leagueName);
 
@@ -83,8 +84,6 @@ public class TeamRepository {
                                     String webPage = getLink(name, leagueObject);
                                     MLBTeams.Team team = new MLBTeams.Team(name, webPage, venueObject, firstYearOfPlay, leagueObject, divisionObject);
                                     teams.add(team);
-                                    Log.d("repository", "Added team: " + team.name);
-                                    updateVenueAddressesForTeam(team);
                                 }
                             }
 
@@ -159,20 +158,5 @@ public class TeamRepository {
         // Handle unknown league names
         return MLBTeams.League.UNKNOWN;
     }
-    public void updateVenueAddressesForTeam(MLBTeams.Team team) {
-        VenueAddressUpdater venueAddressUpdater = new VenueAddressUpdater();
-        venueAddressUpdater.updateVenueAddressAsync(team.venue, team.venue.name, new VenueAddressUpdater.AddressUpdateListener() {
-            @Override
-            public void onAddressUpdated(MLBTeams.Venue venue, String address) {
-                venue.setAddress(address);
-                Log.d("VAU", "Updated address for " + address);
-            }
 
-            @Override
-            public void onError(String errorMessage) {
-                // Handle the error, if necessary
-                Log.e("VAU", errorMessage);
-            }
-        });
-    }
 }
