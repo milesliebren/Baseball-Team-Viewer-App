@@ -31,7 +31,7 @@ public class TeamRepository {
     private RequestQueue requestQueue;
     private Gson gson;
     private List<MLBTeams.Team> allTeams;
-    VenueAddressUpdater vau;
+    MutableLiveData<List<MLBTeams.Team>> liveData;
 
     public TeamRepository(Context context) {
         requestQueue = Volley.newRequestQueue(context);
@@ -42,6 +42,7 @@ public class TeamRepository {
 
     public LiveData<List<MLBTeams.Team>> getTeamsFromAPI() {
         String apiUrl = "https://statsapi.mlb.com/api/v1/teams";
+        liveData = new MutableLiveData<>();
         Log.d("repository", "Accessing Data..." + apiUrl);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -97,6 +98,7 @@ public class TeamRepository {
                             Log.e("repository", "JSON Parsing Error: " + e.getMessage());
                         }
                     }
+
                 },
                 new Response.ErrorListener() {
                     @Override
@@ -107,9 +109,6 @@ public class TeamRepository {
         );
 
         requestQueue.add(jsonObjectRequest);
-
-        // Create LiveData for allTeams and return it
-        MutableLiveData<List<MLBTeams.Team>> liveData = new MutableLiveData<>();
 
         liveData.setValue(allTeams);
         return liveData;

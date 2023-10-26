@@ -38,9 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         setUpTabListeners();
         observeData();
-
-        // Trigger the initial loading of data when the app is first created
-        viewModel.switchToLevel(selectedLeague);
     }
 
     @Override
@@ -55,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
         tabMLB = findViewById(R.id.tabMLB);
         tabTripleA = findViewById(R.id.tabTripleA);
         tabDoubleA = findViewById(R.id.tabDoubleA);
+        viewModel.getLiveMLBTeams().observe(this, new Observer<List<MLBTeams.Team>>() {
+            @Override
+            public void onChanged(List<MLBTeams.Team> teams) {
+                viewModel.switchToLevel(MLBTeams.League.MLB);
+            }
+        });
         TabLayout.OnTabSelectedListener tabSelectedListener = new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -86,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
-        //Log.d("MainActivity", "Selected league: " + selectedLeague);
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
     }
 
@@ -98,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 List<MLBTeams.Team> filteredTeams = filterTeamsByLeague(teams, selectedLeague);
                 teamAdapter.submitList(filteredTeams);
                 teamAdapter.notifyDataSetChanged();
-                //Log.d("MainActivity", "Number of filtered teams: " + filteredTeams.size());
             }
+
         });
 
     }
